@@ -10,23 +10,26 @@
 .
 ├── Readme.md
 ├── app
-│   └── main.go #代码入口
+│   ├── main
+│   └── main.go #程序运行启动
 ├── ctr
 │   └── controller.go 
 ├── go.mod
 ├── go.sum
 ├── model
-│   └── model.go  #数据结构定义
+│   └── model.go #数据结构
+├── processon.png #流程图
 ├── router
 │   └── router.go #路由
 ├── service
-│   ├── service.go #计算器的实现
-│   └── service_test.go #计算器单元测试
+│   ├── service.go #计算器业务逻辑
+│   └── service_test.go #单元测试
 └── test
     ├── __pycache__
     │   └── locust_test.cpython-39.pyc
-    ├── cal_test_report.html #压测报告
-    └── locust_test.py  #压测方法
+    ├── cal_test_report.html #压力测试报告
+    └── locust_test.py #压力测试
+
 
 ```
 
