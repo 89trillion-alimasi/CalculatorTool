@@ -38,5 +38,5 @@ func Controller(c *gin.Context) {
 		}
 
 	}
-	c.JSON(402, gin.H{"data": expr})
+	c.JSON(200, gin.H{"data": expr})
 }
