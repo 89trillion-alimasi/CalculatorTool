@@ -3,53 +3,51 @@ package service
 import (
 	"CalculatorTool/model"
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
 )
 
-func Calculate(s string) (string, error) {
-	fmt.Println(s)
-	s = strings.Replace(s, " ", "", -1)
-	fmt.Println(s)
+func Calculate(s string) (int, error) {
+
 	stack := model.Stack{}
 	preSign := '+'
-	num := 0
-	//if !lastisnum(s) {
-	//	return -1
-	//}
-	for i, ch := range s {
-		if isDigit(ch) {
-			num = num*10 + int(ch-'0')
-		}
+	num := ""
 
+	//判断表达式是否正确
+	for i, ch := range s {
+		//是否是连续操作符
 		if !isDigit(ch) && i < len(s)-1 {
 			if check(i+1, s) {
-				return "", errors.New("")
+				return -1, errors.New("有连续操作符")
+			}
+		} else if i == len(s)-1 { //最后一位必须是操作数
+			if !lastisnum(s) {
+				return -1, errors.New("最后一位必须为操作数")
 			}
 		}
+	}
 
+	for i, ch := range s {
+		if isDigit(ch) {
+			num = num + string(ch)
+		}
 		if !isDigit(ch) && ch != ' ' || i == len(s)-1 {
-			if i == len(s)-1 {
-				if !lastisnum(s) {
-					return "", errors.New("最后一位必须为操作数")
-				}
-			}
+			nums, _ := strconv.Atoi(num)
 			switch preSign {
 			case '+':
-				stack = append(stack, num)
+				stack = append(stack, nums)
 			case '-':
-				stack = append(stack, -num)
+				stack = append(stack, -nums)
 			case '*':
-				stack[len(stack)-1] *= num
+				stack[len(stack)-1] *= nums
 			case '/':
-				if checkDividend(num) {
-					return "", errors.New("被除数不能为零")
+				if checkDividend(nums) {
+					return -1, errors.New("被除数不能为零")
 				}
-				stack[len(stack)-1] /= num
+				stack[len(stack)-1] /= nums
 			}
 			preSign = ch
-			num = 0
+			nums = 0
+			num = ""
 		}
 
 	}
@@ -57,7 +55,7 @@ func Calculate(s string) (string, error) {
 	for _, v := range stack {
 		ans += v
 	}
-	return strconv.Itoa(ans), nil
+	return ans, nil
 }
 
 //判断是否为数字
