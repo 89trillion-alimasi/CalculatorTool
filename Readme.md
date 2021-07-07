@@ -11,24 +11,29 @@
 ├── Readme.md
 ├── app
 │   ├── main
-│   └── main.go #程序运行启动
+│   └── main.go
+├── calculator.png #中缀表示成后缀方法流程图
 ├── ctr
-│   └── controller.go 
+│   ├── StatusErr.go
+│   └── controller.go
+├── env
+│   ├── app.ini
+│   └── parse.go
 ├── go.mod
 ├── go.sum
 ├── model
-│   └── model.go #数据结构
-├── processon.png #流程图
+│   └── model.go #存储结构
+├── processon.png #get请求流程图
 ├── router
 │   └── router.go #路由
 ├── service
-│   ├── service.go #计算器业务逻辑
-│   └── service_test.go #单元测试
+│   ├── service.go
+│   └── service_test.go
 └── test
     ├── __pycache__
     │   └── locust_test.cpython-39.pyc
-    ├── cal_test_report.html #压力测试报告
-    └── locust_test.py #压力测试
+    ├── cal_test_report.html
+    └── locust_test.py
 
 
 ```
@@ -53,9 +58,10 @@
 
 ​	
 
-| 内容 | field | 类型  |
-| ---- | ----- | ----- |
-| 栈   | Stack | []int |
+| 内容 | field  | 类型     |
+| ---- | ------ | -------- |
+| 栈   | Stack  | []int    |
+| 栈   | Stack1 | []string |
 
 
 
@@ -73,31 +79,65 @@
 
 ​		例如expr=3+5/2
 
-### 	响应状态吗	
+### 	响应状态码	
 
 | 状态码 | 说明                 |
 | ------ | -------------------- |
 | 200    | 成功                 |
 | 400    | 请输入表达式         |
-| 401    | 有别的字符           |
+| 401    | 有其他的字符         |
 | 402    | 有连续操作符         |
 | 403    | 最后一位必须为操作数 |
-| 404    | 除数为0              |
+| 404    | 除数不能为0          |
 
-### 	
+### 	请求方式
 
-## 6.第三方库
+​		http 
 
-​	无
+### 	接口地址
 
-## 7.如何编译执行
+​	http://localhost:8000/calculator2
 
-​	进入app 执行./main 可执行文件再打开http://127.0.0.1:8080/calculator?expr=“  ”在引号位置中加入表达式
+### 	请求参数
 
-## 8.todo
+​	表单形式 
+
+| Key  | value   |
+| ---- | ------- |
+| exp  | 3+5 / 2 |
+
+
+
+### 	响应状态码	
+
+| 状态码 | 说明         |
+| ------ | ------------ |
+| 400    | 请输入表达式 |
+| 405    | 计算出现错误 |
+| 200    | 成功         |
+
+
+
+
+
+## 6.todo
 
 1.后期尝试用语法分析器来检查表达式合法性
 
-2.使用逆波兰来计算表达式
+2.后续拓展% ^等运算符
 
-3.后续拓展% ^等运算符
+
+
+
+
+流程图1 post请求中缀表示成后缀进行计算
+
+
+
+![calculator](calculator.png)
+
+
+
+流程图2 get请求 一个栈进行运算
+
+![processon](processon.png)
