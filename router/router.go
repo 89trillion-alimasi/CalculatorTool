@@ -12,6 +12,6 @@ func InitRouter() *gin.Engine {
 
 	// 添加路由
 	r.GET("/calculator", ctr.Controller)
-
+	r.POST("/calculator2", ctr.Controller2)
 	return r
 }
