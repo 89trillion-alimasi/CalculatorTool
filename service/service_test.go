@@ -17,7 +17,7 @@ func TestCalculate(t *testing.T) {
 		{exp: "3+2-1+6/0", want: ""},
 	}
 	for _, v := range test {
-		got, _ := Calculate(v.exp)
+		got, _, _ := Calculate(v.exp)
 		if !reflect.DeepEqual(got, v.want) {
 			t.Error("expect:%v,got:%", v.want, got)
 		}
@@ -37,7 +37,7 @@ func TestCaculator2(t *testing.T) {
 	}
 
 	for _, v := range test {
-		got, _ := Caculator2(v.exp)
+		got, _, _ := Caculator2(v.exp)
 		if !reflect.DeepEqual(got, v.want) {
 			t.Error("expect:%v,got:%", v.want, got)
 		}
