@@ -39,7 +39,7 @@ func Controller(c *gin.Context) {
 			return
 		}
 	}
-	c.JSON(Success, gin.H{Data: expr})
+	c.JSON(Success, StatusText1(Success, expr))
 }
 
 func Controller2(c *gin.Context) {
