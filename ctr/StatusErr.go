@@ -3,6 +3,7 @@ package ctr
 const (
 	Message                 = "Message"
 	Data                    = "Data"
+	Code                    = "Code"
 	ExpressionIsEmpty       = 400
 	ThereAreOtherCharacters = 401
 	ContinuousOperator      = 402
@@ -22,8 +23,25 @@ var statusText = map[int]string{
 	FoundMistake:            "计算出现错误",
 }
 
+type Mesg struct {
+	Code    int
+	Message string
+	Data    int
+}
+
 // StatusText returns a text for the HTTP status code. It returns the empty
 // string if the code is unknown.
-func StatusText(code int) string {
-	return statusText[code]
+func StatusText(code int) Mesg {
+	return Mesg{
+		Code:    code,
+		Message: statusText[code],
+	}
+}
+
+func StatusText1(code int, data int) Mesg {
+	return Mesg{
+		Code:    code,
+		Message: statusText[code],
+		Data:    data,
+	}
 }
