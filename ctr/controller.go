@@ -25,19 +25,19 @@ func Controller(c *gin.Context) {
 		return
 	}
 
-	expr, err := service.Calculate(expression)
+	expr, err, t := service.Calculate(expression)
 	if err != nil {
-		if err.Error() == "有连续操作符" {
+		switch t {
+		case 1:
 			c.JSON(ContinuousOperator, StatusText(ContinuousOperator))
 			return
-		} else if err.Error() == "最后一位必须为操作数" {
+		case 2:
 			c.JSON(lastDigitIsNotNumber, StatusText(lastDigitIsNotNumber))
 			return
-		} else {
+		case 3:
 			c.JSON(InvalidDivisor, StatusText(InvalidDivisor))
 			return
 		}
-
 	}
 	c.JSON(Success, gin.H{Data: expr})
 }
@@ -48,11 +48,21 @@ func Controller2(c *gin.Context) {
 		c.JSON(ExpressionIsEmpty, StatusText(ExpressionIsEmpty))
 		return
 	}
-	data, err := service.Caculator2(exp)
+	data, err, t := service.Caculator2(exp)
 
 	if err != nil {
-		c.JSON(FoundMistake, StatusText(FoundMistake))
-		return
+		switch t {
+		case 1:
+			c.JSON(ContinuousOperator, StatusText(ContinuousOperator))
+			return
+		case 2:
+			c.JSON(lastDigitIsNotNumber, StatusText(lastDigitIsNotNumber))
+			return
+		case 3:
+			c.JSON(InvalidDivisor, StatusText(InvalidDivisor))
+			return
+		}
 	}
+
 	c.JSON(Success, StatusText1(Success, data))
 }

@@ -9,7 +9,7 @@ import (
 	"unicode"
 )
 
-func Calculate(s string) (int, error) {
+func Calculate(s string) (int, error, interface{}) {
 	fmt.Printf(s)
 	s = strings.Replace(s, " ", "", -1)
 	stack := model.Stack{}
@@ -21,11 +21,11 @@ func Calculate(s string) (int, error) {
 		//是否是连续操作符
 		if !isDigit(ch) && i < len(s)-1 {
 			if check(i+1, s) {
-				return -1, errors.New("有连续操作符")
+				return -1, errors.New("有连续操作符"), 1
 			}
 		} else if i == len(s)-1 { //最后一位必须是操作数
 			if !Islastnum(s) {
-				return -1, errors.New("最后一位必须为操作数")
+				return -1, errors.New("最后一位必须为操作数"), 2
 			}
 		}
 	}
@@ -45,7 +45,7 @@ func Calculate(s string) (int, error) {
 				stack[len(stack)-1] *= nums
 			case '/':
 				if checkDividend(nums) {
-					return -1, errors.New("被除数不能为零")
+					return -1, errors.New("被除数不能为零"), 3
 				}
 				stack[len(stack)-1] /= nums
 			}
@@ -59,7 +59,7 @@ func Calculate(s string) (int, error) {
 	for _, v := range stack {
 		ans += v
 	}
-	return ans, nil
+	return ans, nil, nil
 }
 
 //判断是否为数字
@@ -84,9 +84,13 @@ func Islastnum(s string) bool {
 	return '0' <= s[i] && s[i] <= '9'
 }
 
-func Caculator2(s string) (data int, err error) {
-	if !Judgement(s) {
-		return -1, errors.New("请输入正确的表达式")
+//后缀表达式
+func Caculator2(s string) (data int, err error, t interface{}) {
+	if err, t := Judgement(s); !err {
+		if t == 2 {
+			return -1, errors.New("最后一位是操作符"), 2
+		}
+		return -1, errors.New("有连续操作符"), 1
 	}
 	suffix := MixTosuffix(s)
 
@@ -109,7 +113,7 @@ func Caculator2(s string) (data int, err error) {
 				curStack.Push(strconv.Itoa(num2 * num1))
 			case "/":
 				if num1 == 0 {
-					return -1, errors.New("除数不能为零")
+					return -1, errors.New("除数不能为零"), 3
 				}
 				curStack.Push(strconv.Itoa(num2 / num1))
 			}
@@ -117,7 +121,7 @@ func Caculator2(s string) (data int, err error) {
 	}
 	ret := curStack.Top()
 	result, _ := strconv.Atoi(ret)
-	return result, nil
+	return result, nil, nil
 }
 
 //中缀表达式转后缀表达式
@@ -168,10 +172,10 @@ func priority(top, char string) bool {
 }
 
 //判断表达式是否正确
-func Judgement(exp string) bool {
+func Judgement(exp string) (bool, interface{}) {
 	//如果算数表达式的第一个位置的元素不是数字或者最后一个位置的元素不是数字返回false
 	if !unicode.IsDigit(rune(exp[0])) || !unicode.IsDigit(rune(exp[len(exp)-1])) {
-		return false
+		return false, 1
 	}
 	flag := false
 	for _, char := range exp {
@@ -183,11 +187,11 @@ func Judgement(exp string) bool {
 			flag = true
 		} else if !unicode.IsDigit(rune(char)) && flag == true {
 			//不能是连续操作符
-			return false
+			return false, 2
 		} else if unicode.IsDigit(rune(char)) && flag == true {
 			//如果当前是数字，看下面是否还有数字和判断下个是否是操作符
 			flag = false
 		}
 	}
-	return true
+	return true, nil
 }
